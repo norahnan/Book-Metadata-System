@@ -17,6 +17,8 @@ import java.io.PrintWriter;
 /**
  * @author jfoley
  */
+
+//check update
 public class BookzServer extends AbstractHandler {
 	Server jettyServer;
 	HTMLView view;

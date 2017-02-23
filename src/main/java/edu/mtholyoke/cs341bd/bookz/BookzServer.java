@@ -8,17 +8,19 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
+import edu.mtholyoke.cs341bd.bookz.Util;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author jfoley
  */
-
-//check update
 public class BookzServer extends AbstractHandler {
 	Server jettyServer;
 	HTMLView view;
@@ -90,22 +92,61 @@ public class BookzServer extends AbstractHandler {
 
 		String method = req.getMethod();
 		String path = req.getPathInfo();
+		System.out.println("\nThe path is: " + path);
 
-		if ("GET".equals(method)) {
-			if("/robots.txt".equals(path)) {
-				// We're returning a fake file? Here's why: http://www.robotstxt.org/
-				resp.setContentType("text/plain");
-				try (PrintWriter txt = resp.getWriter()) {
-					txt.println("User-Agent: *");
-					txt.println("Disallow: /");
-				}
-				return;
+		if(path.contains("etext")){
+			
+			
+			//get the book id
+			String id = path.substring(path.indexOf("etext"));
+			//get the first letter
+			char firstLetter = path.charAt( (path.indexOf("s:") + 2) );
+			System.out.println("getting comments for: " + firstLetter + "/" + id);
+			
+			//get the list from the book
+			List<GutenbergBook> list = model.getBooksStartingWith(firstLetter);
+			
+			GutenbergBook book = searchByID(list, id);
+			
+			if(method.equals("POST")){
+				//get the comment
+				Map<String, String[]> parameterMap = req.getParameterMap();
+				String text = Util.join(parameterMap.get("comment"));
+				
+			    if(text != null) {
+			    	book.comments.add(new Comment(text));
+			    }
 			}
 			
+			view.displayBookComment(book, resp);
+			
+			
+		}
+		else if ("GET".equals(method)) {
+			
 			String titleCmd = Util.getAfterIfStartsWith("/title/", path);
+			
 			if(titleCmd != null) {
-				char firstChar = titleCmd.charAt(0);
-				view.showBookCollection(this.model.getBooksStartingWith(firstChar), resp);
+				
+					char firstChar = titleCmd.charAt(0);
+					//find the number of entries
+					int numEntries = (int)Math.ceil((double)(model.getBooksStartingWith(firstChar).size()) / (double)(model.getEntriesPerPage()));
+					
+					String pageCmd = Util.getAfterIfStartsWith(("/title/"+firstChar+"/"), path);
+					
+					if(pageCmd != null) {
+						//get the number to pass in 
+						int page = Integer.parseInt(pageCmd);
+						//set the page number in the model
+						model.setCurrentPage(page);
+					}
+					else{
+						//set the page number in the model to zero
+						model.setCurrentPage(0);
+					}
+					
+
+					view.showBookCollection(model.page(firstChar), resp, firstChar, numEntries);
 			}
 
 			// Check for startsWith and substring
@@ -117,8 +158,26 @@ public class BookzServer extends AbstractHandler {
 			// Front page!
 			if ("/front".equals(path) || "/".equals(path)) {
 				view.showFrontPage(this.model, resp);
+				//set the page in the model to zero
+				model.setCurrentPage(0);
 				return;
 			}
 		}
+	}
+	
+	/**
+	 * finds a book from a list
+	 */
+	private GutenbergBook searchByID(List<GutenbergBook> list, String id){
+		//for each book
+		for (int i = 0; i < list.size(); i++){
+			//if the current book matches the id
+			if(list.get(i).id.equals(id)){
+				//return book
+				return list.get(i);
+			}
+		}
+		//return null
+		return null;
 	}
 }

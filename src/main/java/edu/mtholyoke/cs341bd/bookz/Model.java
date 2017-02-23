@@ -8,12 +8,17 @@ import java.util.Map;
 
 public class Model {
 	Map<String, GutenbergBook> library;
+	
+	private int entriesPerPage;
+	private int currentPage;
 
 	public Model() throws IOException {
 		// start with an empty hash-map; tell it it's going to be big in advance:
 		library = new HashMap<>(40000);
 		// do the hard work:
 		DataImport.loadJSONBooks(library);
+		entriesPerPage = 10;
+		currentPage = 0;
 	}
 
 	public GutenbergBook getBook(String id) {
@@ -32,8 +37,38 @@ public class Model {
 		}
 		return matches;
 	}
+	
+	/**
+	 * Returns the next page
+	 */
+	public List<GutenbergBook> page(char firstChar){
+		//calculate the index entries*current
+		int index = (entriesPerPage * currentPage);
+		//if the 
+		//create a new list that is only the entries from index to index + entries
+		return getBooksStartingWith(firstChar).subList(index, (index + entriesPerPage));
+	}
+	
+	/**
+	 * Sets the number of entries allowed per page
+	 */
+	public void setEntriesPerPage(int entries){
+		entriesPerPage = entries;
+	}
+	
+	public void setCurrentPage(int page){
+		currentPage = page;
+	}
+	
+	/**
+	 * Sets the number of entries allowed per page
+	 */
+	public int getEntriesPerPage(){
+		return entriesPerPage;
+	}
 
 	public List<GutenbergBook> getRandomBooks(int count) {
 		return ReservoirSampler.take(count, library.values());
 	}
+	
 }

@@ -57,7 +57,7 @@ public class HTMLView {
 			html.println("<h3>Browse books by title</h3>");
 
 			for(char letter = 'A'; letter <= 'Z'; letter++) {
-				html.println("<a href='/title/"+letter+"'>"+letter+"</a> ");
+				html.println("<a style = \"margin-left: 10pt;\" href='/title/"+letter+"'>"+letter+"</a> ");
 			}
 
 			// get 5 random books:
@@ -67,6 +67,16 @@ public class HTMLView {
 				printBookHTML(html, randomBook);
 			}
 			printPageEnd(html);
+		}
+	}
+	
+	/**
+	 * Prints the comment page
+	 */
+	public void displayBookComment(GutenbergBook book, HttpServletResponse resp) throws IOException {
+		try (PrintWriter html = resp.getWriter()) {
+			book.writePageIntro(html);
+			book.writePageComments(html);
 		}
 	}
 
@@ -81,7 +91,7 @@ public class HTMLView {
 	private void printBookHTML(PrintWriter html, GutenbergBook book) {
 		html.println("<div class='book'>");
 		html.println("<a class='none' href='/book/"+book.id+"'>");
-		html.println("<div class='title'>"+book.title+"</div>");
+		html.println("<div class='title'><a href= \"/comments:"+ book.title.substring(0,1) +"/"+ book.id + "\">"+book.title+"</a></div>");
 		if(book.creator != null) {
 			html.println("<div class='creator'>" + book.creator + "</div>");
 		}
@@ -91,15 +101,24 @@ public class HTMLView {
 		html.println("</div>");
 	}
 
-	public void showBookCollection(List<GutenbergBook> theBooks, HttpServletResponse resp) throws IOException {
+	public void showBookCollection(List<GutenbergBook> theBooks, HttpServletResponse resp, char firstLetter, int numPages) throws IOException {
 		try (PrintWriter html = resp.getWriter()) {
 			printPageStart(html, "Bookz");
 
-			for (int i = 0; i < Math.min(20,theBooks.size()); i++) {
+			for (int i = 0; i < theBooks.size(); i++) {
 				printBookHTML(html, theBooks.get(i));
 			}
+			printPages( html, numPages, firstLetter);
 
 			printPageEnd(html);
+		}
+	}
+	
+	private void printPages(PrintWriter html, int numPages, char firstLetter){
+		//for the number of pages
+		for(int i = 0; i < numPages; i++){
+			//print a link to the book
+			html.print("<a style = \"margin-left: 10pt;\" href = \"/title/" + firstLetter + "/" + i +"\"> " + (i+1) + " </a>");
 		}
 	}
 }

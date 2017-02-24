@@ -55,6 +55,22 @@ public class HTMLView {
 			printPageStart(html, "Bookz");
 
 			html.println("<h3>Browse books by title</h3>");
+			//add the words input space and two buttons
+			html.println("<h3>Enter key word to search</h3>");
+			html.println("<book action=\"searchT\" method=\"POST\">");
+			html.println("      <input type=\"text\" name=\"user\" />");
+			//html.println("     <label>Comment: <input type=\"text\" name=\"comment\" /></label>");
+			html.println("     <input type=\"submit\" value=\"Search by title\" />");
+
+			html.println("  </book>");
+			
+			html.println("<book action=\"searchC\" method=\"POST\">");
+			html.println("      <input type=\"text\" name=\"user\" />");
+			//html.println("     <label>Comment: <input type=\"text\" name=\"comment\" /></label>");
+			html.println("     <input type=\"submit\" value=\"Search by content\" />");
+
+			html.println("  </book>");
+
 
 			for(char letter = 'A'; letter <= 'Z'; letter++) {
 				html.println("<a style = \"margin-left: 10pt;\" href='/title/"+letter+"'>"+letter+"</a> ");

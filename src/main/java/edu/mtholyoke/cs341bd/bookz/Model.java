@@ -38,6 +38,36 @@ public class Model {
 		return matches;
 	}
 	
+	//get title with a certain word
+	public List<GutenbergBook> searchTitle(String search) {
+		// TODO, maybe it makes sense to not compute these every time.
+		String query = search.toUpperCase();
+		
+		List<GutenbergBook> matches = new ArrayList<>(10000); // big
+		for (GutenbergBook book : library.values()) {
+			String first = book.title.toUpperCase();
+			if(first.equals(query)) {
+				matches.add(book);
+			}
+		}
+		return matches;
+	}
+	
+	//get title with a certain word
+	public List<GutenbergBook> searchContent(String search) {
+		// TODO, maybe it makes sense to not compute these every time.
+		String query = search.toUpperCase();
+		
+		List<GutenbergBook> matches = new ArrayList<>(10000); // big
+		for (GutenbergBook book : library.values()) {
+			String first = book.longTitle.toUpperCase();
+			if(first.equals(query)) {
+				matches.add(book);
+			}
+		}
+		return matches;
+	}
+	
 	/**
 	 * Returns the next page
 	 */

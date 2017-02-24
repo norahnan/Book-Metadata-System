@@ -80,6 +80,17 @@ public class Model {
 	}
 	
 	/**
+	 * Returns the next page
+	 */
+	public List<GutenbergBook> pageS(String search){
+		//calculate the index entries*current
+		int index = (entriesPerPage * currentPage);
+		//if the 
+		//create a new list that is only the entries from index to index + entries
+		return searchTitle(search).subList(index, (index + entriesPerPage));
+	}
+	
+	/**
 	 * Sets the number of entries allowed per page
 	 */
 	public void setEntriesPerPage(int entries){

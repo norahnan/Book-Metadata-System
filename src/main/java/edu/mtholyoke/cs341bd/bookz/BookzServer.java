@@ -122,6 +122,18 @@ public class BookzServer extends AbstractHandler {
 			
 			
 		}
+		
+		else if("POST".equals(method)&& "/searchT".equals(path))
+			{
+				handlesearchT(req,resp);
+				return;
+			}
+		else if("POST".equals(method)&& "/searchC".equals(path))
+		{
+			handlesearchC(req,resp);
+			return;
+		}
+		
 		else if ("GET".equals(method)) {
 			
 			String titleCmd = Util.getAfterIfStartsWith("/title/", path);
@@ -165,6 +177,16 @@ public class BookzServer extends AbstractHandler {
 		}
 	}
 	
+	private void handlesearchC(HttpServletRequest req, HttpServletResponse resp) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void handlesearchT(HttpServletRequest req, HttpServletResponse resp) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * finds a book from a list
 	 */

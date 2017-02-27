@@ -182,4 +182,26 @@ public class HTMLView {
 			html.print("<a style = \"margin-left: 10pt;\" href = \"/title/" + firstLetter + "/" + i +"\"> " + (i+1) + " </a>");
 		}
 	}
+	
+	//for search by String
+	public void showBookCollectionW(List<GutenbergBook> theBooks, HttpServletResponse resp, String firstLetter, int numPages) throws IOException {
+		try (PrintWriter html = resp.getWriter()) {
+			printPageStart(html, "Bookz");
+
+			for (int i = 0; i < theBooks.size(); i++) {
+				printBookHTML(html, theBooks.get(i));
+			}
+			printPagesW( html, numPages, firstLetter);
+
+			printPageEnd(html);
+		}
+	}
+	
+	private void printPagesW(PrintWriter html, int numPages, String firstLetter){
+		//for the number of pages
+		for(int i = 0; i < numPages; i++){
+			//print a link to the book
+			html.print("<a style = \"margin-left: 10pt;\" href = \"/title/" + firstLetter + "/" + i +"\"> " + (i+1) + " </a>");
+		}
+	}
 }

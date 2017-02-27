@@ -86,6 +86,21 @@ public class Model {
 		return list.subList(index, (index + entriesPerPage));
 	}
 	
+	public List<GutenbergBook> pageW(String firstChar){
+		//calculate the index entries*current
+		int index = (entriesPerPage * currentPage);
+		
+		//get the list of books that start with a cerain letter
+		List<GutenbergBook> list = searchTitle(firstChar);
+		
+		//if the index plus entries will go over the array
+		if(index + entriesPerPage > list.size()){
+			return list.subList(index, list.size());
+		}
+		//create a new list that is only the entries from index to index + entries
+		return list.subList(index, (index + entriesPerPage));
+	}
+	
 	/**
 	 * Sets the number of entries allowed per page
 	 */

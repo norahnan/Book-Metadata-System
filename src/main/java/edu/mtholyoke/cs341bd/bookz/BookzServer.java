@@ -8,8 +8,6 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
-import edu.mtholyoke.cs341bd.bookz.Util;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -128,6 +126,11 @@ public class BookzServer extends AbstractHandler {
 				handlesearchT(req,resp);
 				return;
 			}
+		else if("POST".equals(method)&& "/flag".equals(path))
+		{
+			view.showFrontPage(this.model, resp, false);
+			return;
+		}
 		else if("POST".equals(method)&& "/searchC".equals(path))
 		{
 			handlesearchC(req,resp);
@@ -169,7 +172,7 @@ public class BookzServer extends AbstractHandler {
 
 			// Front page!
 			if ("/front".equals(path) || "/".equals(path)) {
-				view.showFrontPage(this.model, resp);
+				view.showFrontPage(this.model, resp, true);
 				//set the page in the model to zero
 				model.setCurrentPage(0);
 				return;

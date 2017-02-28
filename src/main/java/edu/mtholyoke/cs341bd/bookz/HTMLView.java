@@ -64,7 +64,7 @@ public class HTMLView {
 			html.println("<form action=\"searchT\" method=\"POST\" align = \"center\">");
 			html.println("      <input type=\"text\" name=\"user\" />");
 			//html.println("     <label>Comment: <input type=\"text\" name=\"comment\" /></label>");
-			html.println("     <input type=\"submit\" value=\"Search by title\" />");
+			html.println("     <input type=\"submit\" value=\"Search by title\" name=\"title\"/>");
 
 			html.println("  </form>");
 			

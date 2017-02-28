@@ -121,11 +121,43 @@ public class BookzServer extends AbstractHandler {
 			
 		}
 		
+		
+		
 		else if("POST".equals(method)&& "/searchT".equals(path))
-			{
-				handlesearchT(req,resp);
-				return;
-			}
+		{
+			
+			//get the input search word
+			Map<String, String[]> parameterMap = req.getParameterMap();
+
+			String titleCmdW = Util.join(parameterMap.get("title"));
+			System.out.println("We are inside the searhc title" + titleCmdW);
+
+			if(titleCmdW != null) {
+				
+					//char firstChar = titleCmd.charAt(0);
+					//find the number of entries
+					int numEntries = (int)Math.ceil((double)(model.searchTitle(titleCmdW).size()) / (double)(model.getEntriesPerPage()));
+					
+					String pageCmd = Util.getAfterIfStartsWith(("/searchT/"+titleCmdW+"/"), path);
+					System.out.println("We are inside the searhc title" + pageCmd);
+					if(pageCmd != null) {
+						//get the number to pass in 
+						int page = Integer.parseInt(pageCmd);
+						//set the page number in the model
+						model.setCurrentPage(page);
+						//System.out.println("We are inside the searhc title");
+					}
+					else{
+						//set the page number in the model to zero
+						model.setCurrentPage(0);
+					}
+					
+
+					view.showBookCollectionW(model.pageW(titleCmdW), resp, titleCmdW, numEntries);
+			//handlesearchT(req,resp);
+			return;
+		}
+		}
 		else if("POST".equals(method)&& "/flag".equals(path))
 		{
 			view.showFrontPage(this.model, resp, false);
@@ -178,6 +210,7 @@ public class BookzServer extends AbstractHandler {
 				return;
 			}
 		}
+		
 	}
 	
 	private void handlesearchC(HttpServletRequest req, HttpServletResponse resp) {

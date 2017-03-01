@@ -61,10 +61,12 @@ public class HTMLView {
 			
 			//add the words input space and two buttons
 			html.println("<h3>Enter key word to search</h3>");
-			html.println("<form action=\"searchT\" method=\"POST\" align = \"center\">");
-			html.println("      <input type=\"text\" name=\"user\" />");
+			//html.println("<form action=\"searchT/0\" method=\"POST\" align = \"center\">");
+			html.println("<form action=\"searchT\" method=\"GET\" align = \"center\">");
+
+			html.println("      <input type=\"text\" name=\"title\" />");
 			//html.println("     <label>Comment: <input type=\"text\" name=\"comment\" /></label>");
-			html.println("     <input type=\"submit\" value=\"Search by title\" name=\"title\"/>");
+			html.println("     <input type=\"submit\" value=\"Search by title\" />");
 
 			html.println("  </form>");
 			

@@ -94,7 +94,6 @@ public class BookzServer extends AbstractHandler {
 
 		if(path.contains("etext")){
 			
-			
 			//get the book id
 			String id = path.substring(path.indexOf("etext"));
 			//get the first letter
@@ -123,23 +122,26 @@ public class BookzServer extends AbstractHandler {
 		
 		
 		
-		else if("POST".equals(method)&& "/searchT".equals(path))
+		else if("GET".equals(method)&& "/searchT".equals(path))
 		{
-			
+			try (PrintWriter html = resp.getWriter()) {
 			//get the input search word
 			Map<String, String[]> parameterMap = req.getParameterMap();
 
 			String titleCmdW = Util.join(parameterMap.get("title"));
-			System.out.println("We are inside the searhc title" + titleCmdW);
+			//System.out.println("We are inside titleCmdW" + titleCmdW);
 
 			if(titleCmdW != null) {
 				
 					//char firstChar = titleCmd.charAt(0);
 					//find the number of entries
 					int numEntries = (int)Math.ceil((double)(model.searchTitle(titleCmdW).size()) / (double)(model.getEntriesPerPage()));
+					html.println(titleCmdW);
+					//html.println("</html>");
+					//update the url to be searchT/"search word"/"page"
 					
 					String pageCmd = Util.getAfterIfStartsWith(("/searchT/"+titleCmdW+"/"), path);
-					System.out.println("We are inside the searhc title" + pageCmd);
+					//System.out.println("We are inside the searhc title" + pageCmd);
 					if(pageCmd != null) {
 						//get the number to pass in 
 						int page = Integer.parseInt(pageCmd);
@@ -155,8 +157,25 @@ public class BookzServer extends AbstractHandler {
 
 					view.showBookCollectionW(model.pageW(titleCmdW), resp, titleCmdW, numEntries);
 			//handlesearchT(req,resp);
-			return;
+			
 		}
+			// Check for startsWith and substring
+						String bookId = Util.getAfterIfStartsWith("/book/", path);
+						System.out.println("This is the bookId in search: " + bookId);
+						System.out.println("This is the path in search: " + path);
+
+						if(bookId != null) {
+							view.showBookPage(this.model.getBook(bookId), resp);
+						}
+
+						// Front page!
+						if ("/front".equals(path) || "/".equals(path)) {
+							view.showFrontPage(this.model, resp, true);
+							//set the page in the model to zero
+							model.setCurrentPage(0);
+							return;
+						}
+			}
 		}
 		else if("POST".equals(method)&& "/flag".equals(path))
 		{
@@ -180,7 +199,7 @@ public class BookzServer extends AbstractHandler {
 					int numEntries = (int)Math.ceil((double)(model.getBooksStartingWith(firstChar).size()) / (double)(model.getEntriesPerPage()));
 					
 					String pageCmd = Util.getAfterIfStartsWith(("/title/"+firstChar+"/"), path);
-					
+					//view.printPagesW();
 					if(pageCmd != null) {
 						//get the number to pass in 
 						int page = Integer.parseInt(pageCmd);
@@ -198,6 +217,8 @@ public class BookzServer extends AbstractHandler {
 
 			// Check for startsWith and substring
 			String bookId = Util.getAfterIfStartsWith("/book/", path);
+			System.out.println("This is the bookId in initial letter: " + bookId);
+
 			if(bookId != null) {
 				view.showBookPage(this.model.getBook(bookId), resp);
 			}
@@ -210,6 +231,7 @@ public class BookzServer extends AbstractHandler {
 				return;
 			}
 		}
+		
 		
 	}
 	

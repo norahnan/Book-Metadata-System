@@ -141,7 +141,7 @@ public class HTMLView {
 		}
 	}
 
-	private void printBookHTML(PrintWriter html, GutenbergBook book) {
+	public void printBookHTML(PrintWriter html, GutenbergBook book) {
 		html.println("<div class='book'>");
 		html.println("<table width=\"50%\">");
 		html.println("<td>");

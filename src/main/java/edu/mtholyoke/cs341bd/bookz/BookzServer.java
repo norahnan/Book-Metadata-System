@@ -153,7 +153,11 @@ public class BookzServer extends AbstractHandler {
 						//set the page number in the model to zero
 						model.setCurrentPage(0);
 					}
-					
+					List<GutenbergBook> randomBooks = model.searchTitle(titleCmdW);
+
+					for (GutenbergBook randomBook : randomBooks) {
+						view.printBookHTML(html, randomBook);
+					}
 
 					view.showBookCollectionW(model.pageW(titleCmdW), resp, titleCmdW, numEntries);
 			//handlesearchT(req,resp);
